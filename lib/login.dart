@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'signup.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -81,7 +82,7 @@ class _MyLoginState extends State<MyLogin> {
                     const SizedBox(
                       height: 50,
                     ),
-                    _loginBtn(),
+                    const _loginBtn(),
                     const SizedBox(
                       height: 90,
                     ),
@@ -91,7 +92,7 @@ class _MyLoginState extends State<MyLogin> {
                     ),
                     _signUpLabel("Sign Up", Color(0xff164276)),
                     const SizedBox(
-                      height: 50,
+                      height: 90,
                     ),
                   ],
                 ),
@@ -117,29 +118,68 @@ Widget _signUpLabel(String label, Color textColor) {
   );
 }
 
-Widget _loginBtn() {
-  return Container(
-    width: double.infinity,
-    height: 60,
-    decoration: const BoxDecoration(
-      color: Color(0xFF7C4DFF),
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-    ),
-    child: TextButton(
-      onPressed: () => {},
-      child: Text(
-        "Login",
-        style: GoogleFonts.josefinSans(
-          textStyle: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w800,
-            fontSize: 24,
+class _loginBtn extends StatelessWidget {
+  const _loginBtn({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 60,
+      decoration: const BoxDecoration(
+        color: Color(0xFF7C4DFF),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MySignUp()),
+          );
+        },
+        child: Text(
+          "Login",
+          style: GoogleFonts.josefinSans(
+            textStyle: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
+
+// Widget _loginBtn() {
+//   return Container(
+//     width: double.infinity,
+//     height: 60,
+//     decoration: const BoxDecoration(
+//       color: Color(0xFF7C4DFF),
+//       borderRadius: BorderRadius.all(Radius.circular(10)),
+//     ),
+//     child: TextButton(
+//       onPressed: () {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => const MySignUp()),
+//         );
+//       },
+//       child: Text(
+//         "Login",
+//         style: GoogleFonts.josefinSans(
+//           textStyle: const TextStyle(
+//             color: Colors.white,
+//             fontWeight: FontWeight.w800,
+//             fontSize: 24,
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
 Widget _labelTextInput(String label, String hintText, bool isPassword) {
   return Column(

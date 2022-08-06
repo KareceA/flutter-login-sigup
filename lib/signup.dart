@@ -1,8 +1,17 @@
+// import 'dart:convert';
+// import 'dart:html';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'signUpapi.dart';
+
+// import 'package:http/http.dart' as http;
+TextEditingController firstnameController = TextEditingController();
+TextEditingController lastnameController = TextEditingController();
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
 
 class MySignUp extends StatefulWidget {
   const MySignUp({Key? key}) : super(key: key);
@@ -70,31 +79,34 @@ class _MySignUpState extends State<MySignUp> {
                     const SizedBox(
                       height: 20,
                     ),
-                    _labelTextInput(
-                        "First Name", "Enter your first name", false),
+                    _labelTextInput("First Name", "Enter your first name",
+                        false, firstnameController),
                     const SizedBox(
                       height: 20,
                     ),
-                    _labelTextInput("Last Name", "Enter your last name", false),
+                    _labelTextInput("Last Name", "Enter your last name", false,
+                        lastnameController),
                     const SizedBox(
                       height: 20,
                     ),
-                    _labelTextInput("Email", "yourname@example.com", false),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _labelTextInput("Password", "yourpassword", true),
+                    _labelTextInput("Email", "yourname@example.com", false,
+                        emailController),
                     const SizedBox(
                       height: 20,
                     ),
                     _labelTextInput(
-                        "Confirm Password", "confirm yourpassword", true),
+                        "Password", "your password", true, passwordController),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _labelTextInput("Confirm Password", "confirm your password",
+                        true, null),
                     const SizedBox(
                       height: 20,
                     ),
                     _SignUpBtn(),
                     const SizedBox(
-                      height: 90,
+                      height: 60,
                     ),
                     _signUpLabel("Already have an account?", Color(0xff909090)),
                     const SizedBox(
@@ -137,7 +149,13 @@ Widget _SignUpBtn() {
       borderRadius: BorderRadius.all(Radius.circular(10)),
     ),
     child: TextButton(
-      onPressed: () => {},
+      onPressed: () => {
+        signUp(
+            firstnameController.text.toString(),
+            lastnameController.text.toString(),
+            emailController.text.toString(),
+            passwordController.text.toString())
+      },
       child: Text(
         "Sign Up",
         style: GoogleFonts.josefinSans(
@@ -152,7 +170,8 @@ Widget _SignUpBtn() {
   );
 }
 
-Widget _labelTextInput(String label, String hintText, bool isPassword) {
+Widget _labelTextInput(
+    String label, String hintText, bool isPassword, controller) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -165,6 +184,7 @@ Widget _labelTextInput(String label, String hintText, bool isPassword) {
                 fontSize: 20)),
       ),
       TextField(
+        controller: controller,
         obscureText: isPassword,
         cursorColor: Colors.red,
         decoration: InputDecoration(

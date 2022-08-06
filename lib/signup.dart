@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myregistration/login.dart';
 import 'signUpapi.dart';
 
 // import 'package:http/http.dart' as http;
@@ -112,7 +113,15 @@ class _MySignUpState extends State<MySignUp> {
                     const SizedBox(
                       height: 10,
                     ),
-                    _signUpLabel("Login", Color(0xff164276)),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyLogin()),
+                          );
+                        },
+                        child: _signUpLabel("Login", Color(0xff164276))),
                     const SizedBox(
                       height: 50,
                     ),
@@ -151,10 +160,10 @@ Widget _SignUpBtn() {
     child: TextButton(
       onPressed: () => {
         signUp(
-            firstnameController.text.toString(),
-            lastnameController.text.toString(),
-            emailController.text.toString(),
-            passwordController.text.toString())
+            firstName: firstnameController.text.toString(),
+            lastName: lastnameController.text.toString(),
+            email: emailController.text.toString(),
+            password: passwordController.text.toString())
       },
       child: Text(
         "Sign Up",

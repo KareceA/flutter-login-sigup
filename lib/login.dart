@@ -1,9 +1,15 @@
 import 'dart:ui';
+import 'package:myregistration/welcome.dart';
+
 import 'signup.dart';
+import 'loginApi.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -74,23 +80,61 @@ class _MyLoginState extends State<MyLogin> {
                     const SizedBox(
                       height: 50,
                     ),
-                    _labelTextInput("Email", "yourname@example.com", false),
+                    _labelTextInput(
+                      "Email",
+                      "yourname@example.com",
+                      false,
+                      emailController,
+                    ),
                     const SizedBox(
                       height: 50,
                     ),
-                    _labelTextInput("Password", "yourpassword", true),
+                    _labelTextInput(
+                      "Password",
+                      "yourpassword",
+                      true,
+                      passwordController,
+                    ),
                     const SizedBox(
                       height: 50,
                     ),
-                    const _loginBtn(),
+                    _loginBtn(
+                      () => {
+                        login(
+                            email: emailController.text.toString(),
+                            password: passwordController.text.toString()),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyWelcome()),
+                        ),
+                      },
+                    ),
                     const SizedBox(
                       height: 90,
                     ),
-                    _signUpLabel("Don't have an account?", Color(0xff909090)),
+                    _signUpLabel(
+                        "Don't have an account?",
+                        Color(
+                          0xff909090,
+                        )),
                     const SizedBox(
                       height: 10,
                     ),
-                    _signUpLabel("Sign Up", Color(0xff164276)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MySignUp()),
+                        );
+                      },
+                      child: _signUpLabel(
+                          "Sign Up",
+                          Color(
+                            0xff164276,
+                          )),
+                    ),
                     const SizedBox(
                       height: 90,
                     ),
@@ -118,70 +162,32 @@ Widget _signUpLabel(String label, Color textColor) {
   );
 }
 
-class _loginBtn extends StatelessWidget {
-  const _loginBtn({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 60,
-      decoration: const BoxDecoration(
-        color: Color(0xFF7C4DFF),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MySignUp()),
-          );
-        },
-        child: Text(
-          "Login",
-          style: GoogleFonts.josefinSans(
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 24,
-            ),
+Widget _loginBtn(VoidCallback onPressed) {
+  return Container(
+    width: double.infinity,
+    height: 60,
+    decoration: const BoxDecoration(
+      color: Color(0xFF7C4DFF),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+    ),
+    child: TextButton(
+      onPressed: onPressed,
+      child: Text(
+        "Login",
+        style: GoogleFonts.josefinSans(
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            fontSize: 24,
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }
 
-// Widget _loginBtn() {
-//   return Container(
-//     width: double.infinity,
-//     height: 60,
-//     decoration: const BoxDecoration(
-//       color: Color(0xFF7C4DFF),
-//       borderRadius: BorderRadius.all(Radius.circular(10)),
-//     ),
-//     child: TextButton(
-//       onPressed: () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (context) => const MySignUp()),
-//         );
-//       },
-//       child: Text(
-//         "Login",
-//         style: GoogleFonts.josefinSans(
-//           textStyle: const TextStyle(
-//             color: Colors.white,
-//             fontWeight: FontWeight.w800,
-//             fontSize: 24,
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }
-
-Widget _labelTextInput(String label, String hintText, bool isPassword) {
+Widget _labelTextInput(
+    String label, String hintText, bool isPassword, controller) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -194,6 +200,7 @@ Widget _labelTextInput(String label, String hintText, bool isPassword) {
                 fontSize: 20)),
       ),
       TextField(
+        controller: controller,
         obscureText: isPassword,
         cursorColor: Colors.red,
         decoration: InputDecoration(

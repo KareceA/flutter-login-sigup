@@ -22,6 +22,9 @@ class MyWelcome extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   _welcomeLabel("Welcome", Color(0xff909090)),
                   const SizedBox(
                     height: 20,
@@ -43,7 +46,7 @@ class MyWelcome extends StatelessWidget {
 
 Widget _loginBtn(VoidCallback onPress) {
   return Container(
-    width: double.infinity,
+    width: 300,
     height: 60,
     decoration: const BoxDecoration(
       color: Color(0xFF7C4DFF),
@@ -71,8 +74,8 @@ Widget _welcomeLabel(String label, Color textColor) {
     style: GoogleFonts.josefinSans(
       textStyle: TextStyle(
         color: textColor,
-        fontWeight: FontWeight.w800,
-        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        fontSize: 35,
       ),
     ),
   );
@@ -81,8 +84,8 @@ Widget _welcomeLabel(String label, Color textColor) {
 Widget _logo() {
   return Center(
     child: SizedBox(
-      height: 200,
-      width: 200,
+      height: 300,
+      width: 300,
       child: SvgPicture.asset("images/welcome.svg"),
     ),
   );

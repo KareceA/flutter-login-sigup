@@ -22,6 +22,7 @@ void signUp(
       var data = jsonDecode(response.body.toString());
       print(data);
       print('SignUp successfully');
+      return data['message'];
     } else {
       print('failed');
     }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:myregistration/welcome.dart';
 
@@ -11,6 +12,46 @@ import 'package:google_fonts/google_fonts.dart';
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
+// FutureBuilder<Login> buildLoginFutureBuilder() {
+//   return FutureBuilder<Login>(
+//     future: _futureLogin,
+//     builder: (context, snapshot) {
+//       if (snapshot.hasData) {
+//         Future<void> _showMyDialog() async {
+//           return showDialog<void>(
+//             context: context,
+//             barrierDismissible: false, // user must tap button!
+//             builder: (BuildContext context) {
+//               return AlertDialog(
+//                 title: const Text('AlertDialog Title'),
+//                 content: SingleChildScrollView(
+//                   child: ListBody(
+//                     children: const <Widget>[
+//                       Text('This is a demo alert dialog.'),
+//                       Text('Would you like to approve of this message?'),
+//                     ],
+//                   ),
+//                 ),
+//                 actions: <Widget>[
+//                   TextButton(
+//                     child: const Text('Approve'),
+//                     onPressed: () {
+//                       Navigator.of(context).pop();
+//                     },
+//                   ),
+//                 ],
+//               );
+//             },
+//           );
+//         }
+//       } else if (snapshot.hasError) {
+//         return Text('${snapshot.error}');
+//       }
+//       return const CircularProgressIndicator();
+//     },
+//   );
+// }
+
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
 
@@ -21,6 +62,30 @@ class MyLogin extends StatefulWidget {
 class _MyLoginState extends State<MyLogin> {
   @override
   Widget build(BuildContext context) {
+    List loginResponse;
+    VoidCallback authenticate = () async {
+      loginResponse = await login(
+          email: emailController.text.toString(),
+          password: passwordController.text.toString());
+      var values = jsonDecode(loginResponse[1]);
+      print(values['status']);
+
+      if (loginResponse[0] == 200) {
+        if (values['status'] == 422) {
+          print((values['message']));
+        } else {
+          print((values['message']));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyWelcome(),
+              ));
+        }
+      } else {
+        print('incorrect credentials');
+      }
+    };
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -99,16 +164,7 @@ class _MyLoginState extends State<MyLogin> {
                       height: 50,
                     ),
                     _loginBtn(
-                      () => {
-                        login(
-                            email: emailController.text.toString(),
-                            password: passwordController.text.toString()),
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyWelcome()),
-                        ),
-                      },
+                      authenticate,
                     ),
                     const SizedBox(
                       height: 90,

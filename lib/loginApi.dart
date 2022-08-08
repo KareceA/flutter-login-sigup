@@ -16,13 +16,6 @@ Future<List> login({
 
     statusCode = response.statusCode;
     responseBody = response.body.toString();
-    // if (response.statusCode == 200) {
-    //   var data = jsonDecode(response.body.toString());
-    //   print(data);
-    //   print('Login successfully');
-    // } else {
-    //   print('failed');
-    // }
   } catch (e) {
     print(e.toString());
   }

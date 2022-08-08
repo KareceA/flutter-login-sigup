@@ -1,5 +1,6 @@
 // import 'dart:convert';
 // import 'dart:html';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -7,12 +8,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myregistration/login.dart';
 import 'signUpapi.dart';
+import 'login.dart';
 
 // import 'package:http/http.dart' as http;
 TextEditingController firstnameController = TextEditingController();
 TextEditingController lastnameController = TextEditingController();
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
+TextEditingController confirmpasswordController = TextEditingController();
 
 class MySignUp extends StatefulWidget {
   const MySignUp({Key? key}) : super(key: key);
@@ -22,6 +25,35 @@ class MySignUp extends StatefulWidget {
 }
 
 class _MySignUpState extends State<MySignUp> {
+  Future<String> authenticate() async {
+    List? loginResponse;
+    loginResponse = await signUp(
+        firstName: firstnameController.text,
+        lastName: lastnameController.text.toString(),
+        email: emailController.text.toString(),
+        password: passwordController.text.toString());
+    var values = jsonDecode(loginResponse[1]);
+    print(values['status']);
+
+    if (loginResponse[0] == 200) {
+      if (values['status'] == 422) {
+        print((values['message']));
+        return values["message"];
+      } else {
+        print((values['message']));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyLogin(),
+            ));
+      }
+      return values["message"];
+    } else {
+      print('incorrect credentials');
+      return values["Invalid Credentials"];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,11 +133,24 @@ class _MySignUpState extends State<MySignUp> {
                       height: 20,
                     ),
                     _labelTextInput("Confirm Password", "confirm your password",
-                        true, null),
+                        true, confirmpasswordController),
                     const SizedBox(
                       height: 20,
                     ),
-                    _SignUpBtn(),
+                    _SignUpBtn(() async {
+                      String message = await authenticate();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(message),
+                          action: SnackBarAction(
+                            label: 'Ok',
+                            onPressed: () {
+                              // Code to execute.
+                            },
+                          ),
+                        ),
+                      );
+                    }, context),
                     const SizedBox(
                       height: 60,
                     ),
@@ -149,7 +194,7 @@ Widget _signUpLabel(String label, Color textColor) {
   );
 }
 
-Widget _SignUpBtn() {
+Widget _SignUpBtn(VoidCallback onPressed, BuildContext context) {
   return Container(
     width: double.infinity,
     height: 60,
@@ -159,6 +204,20 @@ Widget _SignUpBtn() {
     ),
     child: TextButton(
       onPressed: () => {
+        onPressed(),
+        if (confirmpasswordController.text.trim() !=
+            passwordController.text.trim())
+          {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text('Password do not match'),
+              action: SnackBarAction(
+                label: 'ok',
+                onPressed: () {
+                  // Code to execute.
+                },
+              ),
+            ))
+          },
         signUp(
             firstName: firstnameController.text.toString(),
             lastName: lastnameController.text.toString(),
